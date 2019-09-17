@@ -1,6 +1,7 @@
 from PIL import Image
 import numpy as np
 import random
+import math
 from matplotlib import pyplot as plt
 
 class Convolution:
@@ -40,17 +41,42 @@ class Convolution:
         new_image = np.array(image)
         height = len(image)
         width = len(image[0])
+        kernel_center = math.floor(len(matrix) / 2)
 
         for row_index in range(height-kernel_size):
             for col_index in range(width-kernel_size):
 
                 image_part = image[row_index:row_index+kernel_size, col_index:col_index+kernel_size]
-                result = np.dot(matrix, image_part)
-                result = np.average(result)
-                new_image[row_index+1, col_index+1] = result
-                print(result)
-
+                result = matrix * image_part
+                result_average = np.average(result)
+                new_image[row_index + kernel_center, col_index + kernel_center] = result_average
 
         s_n_p = Image.fromarray(new_image, mode='L')
         s_n_p.show()
         s_n_p.save('average.jpg')
+
+    def filter_median(self, image):
+
+        matrix = [
+            [1, 1, 1],
+            [1, 1, 1],
+            [1, 1, 1]
+        ]
+        kernel_size = len(matrix)
+
+        new_image = np.array(image)
+        height = len(image)
+        width = len(image[0])
+        kernel_center = math.floor(len(matrix) / 2)
+
+        for row_index in range(height-kernel_size):
+            for col_index in range(width-kernel_size):
+
+                image_part = image[row_index:row_index+kernel_size, col_index:col_index+kernel_size]
+                result = matrix * image_part
+                result_average = np.median(result)
+                new_image[row_index + kernel_center, col_index + kernel_center] = result_average
+
+        s_n_p = Image.fromarray(new_image, mode='L')
+        s_n_p.show()
+        s_n_p.save('median.jpg')
