@@ -51,11 +51,12 @@ for image_name in images:
     convolution = Convolution(kernel_size=len(kernel))
     image = convolution.load_image('%s' % image_name)
     # convolution.equalize_histogram(image, image_name)
-    convolution.multi_limiarize(image, image_name, thresholds=[80, 160])
+    # convolution.multi_limiarize(image, image_name, thresholds=[80, 160])
 
     # convolution.prewitt(image, 'PREWITT')
     # convolution.sobel(image, 'SOBEL')
-    # convolution.laplacian(image, 'LAPLACE')
+    image = convolution.filter_average(image, kernel_size=5)
+    convolution.filter_gaussian(image)
     #
     # image = convolution.load_image('%s' % image_name)
     #

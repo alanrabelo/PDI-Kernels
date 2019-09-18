@@ -54,32 +54,25 @@ class Convolution:
 
         return self.save_image('salt_and_pepper', new_image)
 
-    def filter_average(self, image, kernel):
+    def filter_average(self, image, kernel_size=3):
 
-        kernel_size = len(kernel)
+        kernel_size = kernel_size
         new_image = np.array(image)
         height = len(image)
         width = len(image[0])
-        kernel_center = math.floor(len(kernel) / 2)
+        kernel_center = math.floor(float(kernel_size) / 2)
 
         for row_index in range(height-kernel_size+1):
             for col_index in range(width-kernel_size+1):
                     image_part = image[row_index:row_index+kernel_size, col_index:col_index+kernel_size]
-                    result = kernel * image_part
-                    result_average = np.average(result)
+                    result_average = np.average(image_part)
                     new_image[row_index + kernel_center, col_index + kernel_center] = result_average
 
         return self.save_image('average', new_image)
 
     def filter_gaussian(self, image):
 
-        kernel = [
-                   [ 1.0278445 ,  4.10018648,  6.49510362,  4.10018648,  1.0278445 ],
-                   [ 4.10018648, 16.35610171, 25.90969361, 16.35610171,  4.10018648],
-                   [ 6.49510362, 25.90969361, 41.0435344 , 25.90969361,  6.49510362],
-                   [ 4.10018648, 16.35610171, 25.90969361, 16.35610171,  4.10018648],
-                   [ 1.0278445 ,  4.10018648,  6.49510362,  4.10018648,  1.0278445]
-                ]
+        kernel = [[1.0,2.0,1.0], [2.0,4.0,2.0], [1.0,2.0,1.0]]
 
         kernel_size = len(kernel)
         new_image = np.array(image)
@@ -91,7 +84,7 @@ class Convolution:
             for col_index in range(width-kernel_size+1):
                     image_part = image[row_index:row_index+kernel_size, col_index:col_index+kernel_size]
                     result = kernel * image_part
-                    result_average = np.average(result)
+                    result_average = np.sum(result) / 16.0
                     new_image[row_index + kernel_center, col_index + kernel_center] = result_average
 
         return self.save_image('GAUSSIAN', new_image)
@@ -195,9 +188,9 @@ class Convolution:
     def laplacian(self, image, filename):
 
         laplacian = [
-            [0, 1, 0],
-            [1, -4, 1],
-            [0, 1, 0]
+            [1, 1, 1],
+            [1, -8, 1],
+            [1, 1, 1]
           ]
 
         kernel_size = len(laplacian)
@@ -277,5 +270,4 @@ class Convolution:
 
                 new_image[row_index, col_index] = next_value
 
-        print(new_image)
         self.save_image(('%s_multi_limiarized' % filename), new_image)
