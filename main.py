@@ -1,5 +1,6 @@
 from convolution import Convolution
 import numpy as np
+from matplotlib import pyplot as plt
 
 kernel = np.array([
     [1, 1, 1],
@@ -26,9 +27,9 @@ laplacian_1 = np.array([
           ])
 
 laplacian_2 = np.array([
-    [-1, -1, -1],
-    [-1, 8, -1],
-    [-1, -1, -1]
+    [1, 1, 1],
+    [1, -8, 1],
+    [1, 1, 1]
           ])
 
 prewitt_1 = np.array([
@@ -43,22 +44,22 @@ prewitt_2 = np.array([
     [1, 1, 1]
           ])
 
-images = ['lena_original']
-# images = ['lena_original', 'zebra', 'manhattan_medium']
+# images = ['lena_original']
+images = ['Lena', 'Zebra']
 
-for image in images:
+for image_name in images:
     convolution = Convolution(kernel_size=len(kernel))
-    image = convolution.load_image('%s' % image)
-    image = convolution.filter_average(image, kernel)
-    image = convolution.filter_average(image, kernel)
+    image = convolution.load_image('%s' % image_name)
+    # convolution.equalize_histogram(image, image_name)
+    convolution.multi_limiarize(image, image_name, thresholds=[80, 160])
 
-    convolution.convolve(image, sobel_H, 'sobel_H')
-    convolution.convolve(image, sobel_V, 'sobel_V')
-    convolution.convolve(image, laplacian_1, 'laplacian1')
-    convolution.convolve(image, laplacian_2, 'laplacian2')
-    convolution.convolve(image, prewitt_1, 'prewitt_1')
-    convolution.convolve(image, prewitt_2, 'prewitt_2')
-    image = convolution.salt_and_pepper(image)
-    convolution.filter_average(image, kernel)
-    convolution.filter_median(image, kernel)
+    # convolution.prewitt(image, 'PREWITT')
+    # convolution.sobel(image, 'SOBEL')
+    # convolution.laplacian(image, 'LAPLACE')
+    #
+    # image = convolution.load_image('%s' % image_name)
+    #
+    # image = convolution.salt_and_pepper(image)
+    # convolution.filter_average(image, kernel)
+    # convolution.filter_median(image, kernel)
 
